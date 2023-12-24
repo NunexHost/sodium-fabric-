@@ -73,6 +73,7 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "it.unimi.dsi:fastutil:8.5.8"
 
     modIncludeImplementation "com.lodborg:interval-tree:1.0.0"
 
