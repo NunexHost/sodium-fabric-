@@ -1,7 +1,6 @@
 package me.jellysquid.mods.sodium.mixin.core.model.colors;
 
-import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
-import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
+import it.unimi.dsi.fastutil.objects.IdentityHashMap;
 import me.jellysquid.mods.sodium.client.model.color.interop.ItemColorsExtended;
 import net.minecraft.client.color.item.ItemColorProvider;
 import net.minecraft.client.color.item.ItemColors;
@@ -15,19 +14,26 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemColors.class)
 public class ItemColorsMixin implements ItemColorsExtended {
+
     @Unique
-    private final Reference2ReferenceMap<ItemConvertible, ItemColorProvider> itemsToColor =
-            new Reference2ReferenceOpenHashMap<>();
+    private final IdentityHashMap<ItemConvertible, ItemColorProvider> itemsToColor =
+        new IdentityHashMap<>();
 
     @Inject(method = "register", at = @At("TAIL"))
     private void preRegisterColor(ItemColorProvider provider, ItemConvertible[] items, CallbackInfo ci) {
         for (ItemConvertible convertible : items) {
-            this.itemsToColor.put(convertible.asItem(), provider);
+            this.itemsToColor.put(convertible, provider);
         }
     }
 
     @Override
     public ItemColorProvider sodium$getColorProvider(ItemStack stack) {
-        return this.itemsToColor.get(stack.getItem());
+        /*
+         * Pre-calculate `ItemStack.getItem()` to avoid repetitive calls.
+         */
+        Item item = stack.getItem();
+
+        return this.itemsToColor.get(item);
     }
 }
+
