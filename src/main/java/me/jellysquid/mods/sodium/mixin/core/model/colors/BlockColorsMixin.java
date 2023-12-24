@@ -23,10 +23,10 @@ public class BlockColorsMixin implements BlockColorsExtended {
 
     // We're keeping a copy as we need to be able to iterate over the entry pairs, rather than just the values.
     @Unique
-    private final Reference2ReferenceMap<Block, BlockColorProvider> blocksToColor = new Reference2ReferenceOpenHashMap<>();
+    private final Reference2ReferenceMap<Block, BlockColorProvider> blocksToColor;
 
     @Unique
-    private final ReferenceSet<Block> overridenBlocks = new ReferenceOpenHashSet<>();
+    private final ReferenceSet<Block> overridenBlocks;
 
     @Inject(method = "registerColorProvider", at = @At("HEAD"))
     private void preRegisterColorProvider(BlockColorProvider provider, Block[] blocks, CallbackInfo ci) {
@@ -54,8 +54,8 @@ public class BlockColorsMixin implements BlockColorsExtended {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void init(CallbackInfo ci) {
-        this.blocksToColor = new HashMap<>();
-        this.overridenBlocks = new HashSet<>();
+        this.blocksToColor = new Reference2ReferenceOpenHashMap<>();
+        this.overridenBlocks = new ReferenceOpenHashSet<>();
     }
 
     @Inject(method = "getColorProvider", at = @At("HEAD"))
