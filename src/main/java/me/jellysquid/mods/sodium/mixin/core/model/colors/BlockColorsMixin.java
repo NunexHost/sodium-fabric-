@@ -53,9 +53,9 @@ public class BlockColorsMixin implements BlockColorsExtended {
     // Optimized code starts here
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void init(CallbackInfo ci) {
-        this.blocksToColor = new Reference2ReferenceOpenHashMap<>();
-        this.overridenBlocks = new ReferenceOpenHashSet<>();
+    public BlockColorsMixin(CallbackInfo ci) {
+    this.blocksToColor = new Reference2ReferenceOpenHashMap<>();
+    this.overridenBlocks = new ReferenceOpenHashSet<>();
     }
 
     @Inject(method = "getColorProvider", at = @At("HEAD"))
