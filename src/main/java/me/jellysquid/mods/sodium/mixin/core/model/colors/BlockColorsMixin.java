@@ -4,6 +4,8 @@ import it.unimi.dsi.fastutil.objects.*;
 import me.jellysquid.mods.sodium.client.SodiumClientMod;
 import me.jellysquid.mods.sodium.client.model.color.interop.BlockColorsExtended;
 import net.minecraft.block.Block;
+import java.util.Map;
+import java.util.Set;
 import net.minecraft.client.color.block.BlockColorProvider;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.registry.Registries;
