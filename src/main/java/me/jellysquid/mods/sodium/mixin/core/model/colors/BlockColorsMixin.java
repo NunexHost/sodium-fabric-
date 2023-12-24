@@ -2,6 +2,7 @@ package me.jellysquid.mods.sodium.mixin.core.model.colors;
 
 import it.unimi.dsi.fastutil.objects.*;
 import net.minecraft.block.Block;
+import me.jellysquid.mods.sodium.client.SodiumClientMod;
 import net.minecraft.client.color.block.BlockColorProvider;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.registry.Registries;
