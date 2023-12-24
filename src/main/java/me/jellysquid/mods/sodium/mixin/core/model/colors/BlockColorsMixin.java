@@ -6,6 +6,9 @@ import me.jellysquid.mods.sodium.client.model.color.interop.BlockColorsExtended;
 import net.minecraft.block.Block;
 import java.util.Map;
 import java.util.Set;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Collections;
 import net.minecraft.client.color.block.BlockColorProvider;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.registry.Registries;
@@ -20,10 +23,10 @@ public class BlockColorsMixin implements BlockColorsExtended {
 
     // We're keeping a copy as we need to be able to iterate over the entry pairs, rather than just the values.
     @Unique
-    private final Map<Block, BlockColorProvider> blocksToColor;
+    private final Reference2ReferenceMap<Block, BlockColorProvider> blocksToColor = new Reference2ReferenceOpenHashMap<>();
 
     @Unique
-    private final Set<Block> overridenBlocks;
+    private final ReferenceSet<Block> overridenBlocks = new ReferenceOpenHashSet<>();
 
     @Inject(method = "registerColorProvider", at = @At("HEAD"))
     private void preRegisterColorProvider(BlockColorProvider provider, Block[] blocks, CallbackInfo ci) {
@@ -38,13 +41,13 @@ public class BlockColorsMixin implements BlockColorsExtended {
     }
 
     @Override
-    public Map<Block, BlockColorProvider> sodium$getProviders() {
-        return Collections.unmodifiableMap(this.blocksToColor);
+    public Reference2ReferenceMap<Block, BlockColorProvider> sodium$getProviders() {
+        return this.blocksToColor;
     }
 
     @Override
-    public Set<Block> sodium$getOverridenVanillaBlocks() {
-        return Collections.unmodifiableSet(this.overridenBlocks);
+    public ReferenceSet<Block> sodium$getOverridenVanillaBlocks() {
+        return this.overridenBlocks;
     }
 
     // Optimized code starts here
