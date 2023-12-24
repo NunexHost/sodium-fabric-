@@ -15,12 +15,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BlockColors.class)
 public class BlockColorsMixin implements BlockColorsExtended {
+
     // We're keeping a copy as we need to be able to iterate over the entry pairs, rather than just the values.
     @Unique
-    private final Reference2ReferenceMap<Block, BlockColorProvider> blocksToColor = new Reference2ReferenceOpenHashMap<>();
+    private final Map<Block, BlockColorProvider> blocksToColor;
 
     @Unique
-    private final ReferenceSet<Block> overridenBlocks = new ReferenceOpenHashSet<>();
+    private final Set<Block> overridenBlocks;
 
     @Inject(method = "registerColorProvider", at = @At("HEAD"))
     private void preRegisterColorProvider(BlockColorProvider provider, Block[] blocks, CallbackInfo ci) {
@@ -35,12 +36,27 @@ public class BlockColorsMixin implements BlockColorsExtended {
     }
 
     @Override
-    public Reference2ReferenceMap<Block, BlockColorProvider> sodium$getProviders() {
-        return Reference2ReferenceMaps.unmodifiable(this.blocksToColor);
+    public Map<Block, BlockColorProvider> sodium$getProviders() {
+        return Collections.unmodifiableMap(this.blocksToColor);
     }
 
     @Override
-    public ReferenceSet<Block> sodium$getOverridenVanillaBlocks() {
-        return ReferenceSets.unmodifiable(this.overridenBlocks);
+    public Set<Block> sodium$getOverridenVanillaBlocks() {
+        return Collections.unmodifiableSet(this.overridenBlocks);
     }
+
+    // Optimized code starts here
+
+    @Inject(method = "<init>", at = @At("RETURN"))
+    private void init(CallbackInfo ci) {
+        this.blocksToColor = new HashMap<>();
+        this.overridenBlocks = new HashSet<>();
+    }
+
+    @Inject(method = "getColorProvider", at = @At("HEAD"))
+    private BlockColorProvider getColorProvider(Block block, CallbackInfo ci) {
+        return this.blocksToColor.get(block);
+    }
+
+    // Optimized code ends here
 }
