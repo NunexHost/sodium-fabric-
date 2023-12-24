@@ -6,6 +6,7 @@ import net.minecraft.client.render.chunk.BlockBufferBuilderPool;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(BufferBuilderStorage.class)
