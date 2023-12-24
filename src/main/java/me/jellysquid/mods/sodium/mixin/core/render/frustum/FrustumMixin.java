@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(Frustum.class)
 public class FrustumMixin implements ViewportProvider {
+
     @Shadow
     private double x;
 
@@ -25,8 +26,19 @@ public class FrustumMixin implements ViewportProvider {
     @Final
     private FrustumIntersection frustumIntersection;
 
+    @Final
+    private Viewport viewport;
+
     @Override
     public Viewport sodium$createViewport() {
-        return new Viewport(new SimpleFrustum(this.frustumIntersection), new Vector3d(this.x, this.y, this.z));
+
+        // Direct FrustumIntersection Access
+
+        FrustumIntersection frustum = this.frustumIntersection;
+
+        // Lazy Viewport Creation
+
+        return viewport != null ? viewport : new Viewport(new SimpleFrustum(frustum), new Vector3d(this.x, this.y, this.z));
     }
 }
+
